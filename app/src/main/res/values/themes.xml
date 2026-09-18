@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+        Deliberately close to the rest of the family, which sets none of this.
+
+        This app used to make both system bars transparent and draw behind them.
+        Combined with targetSdk 36 - where Android enforces edge to edge - the
+        strips under the bars showed whatever the compositor still had in them
+        after a screen change: the previous screen, or this light launch colour
+        on a dark theme. The other five apps target 34, never went edge to edge,
+        and never showed it.
+
+        windowOptOutEdgeToEdgeEnforcement keeps that true on Android 15 and
+        later, which would otherwise force edge to edge back on for anything
+        targeting 35 or above regardless of what the app asked for.
+    -->
+    <style name="Theme.Remainder" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/launch_background</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
+    </style>
+</resources>
