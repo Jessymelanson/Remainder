@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The pink the app opens on, so the first frame is not a white flash. -->
+    <color name="launch_background">#FFF4F8</color>
+    <color name="ic_launcher_background">#FF7BA8</color>
+</resources>

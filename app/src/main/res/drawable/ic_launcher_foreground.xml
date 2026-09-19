@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    A purse with a heart on it. Drawn as a vector so it stays sharp at every
+    launcher size, and kept inside the middle of the canvas so no launcher
+    shape crops it.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Clasp handle -->
+    <path
+        android:pathData="M42,50 L42,44 A12,12 0 0,1 66,44 L66,50"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="6"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+
+    <!-- Purse body -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M34,49 L74,49 A9,9 0 0,1 83,58 L83,77 A9,9 0 0,1 74,86 L34,86 A9,9 0 0,1 25,77 L25,58 A9,9 0 0,1 34,49 Z" />
+
+    <!-- Heart punched out of the body -->
+    <path
+        android:fillColor="#FF7BA8"
+        android:pathData="M54,79 C44.5,72.5 40,67.5 40,62.5 A7.2,7.2 0 0,1 54,59.6 A7.2,7.2 0 0,1 68,62.5 C68,67.5 63.5,72.5 54,79 Z" />
+</vector>
