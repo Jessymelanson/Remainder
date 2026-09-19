@@ -38,24 +38,27 @@ Same bill, same year, but every check in a three-payday month goes further.
 Averaging it away over 26 paychecks would hide the one month in six that is
 genuinely easier than the rest.
 
-## If you want to say thanks
+## Install it
 
-Remainder is free and stays free. There is nothing to unlock, no account, and
-nothing here is gated behind a donation.
+Android will not install an app from outside a store until you allow it once.
+That is a normal part of installing anything this way, not a sign of a problem.
 
-If you get use out of it and feel like sending something, these are the only
-addresses I use. Check them character by character - transfers on both chains
-are irreversible.
+1. On the phone, open [Releases](../../releases) and download
+   `Remainder-release.apk`.
 
-| Chain | Address |
-|---|---|
-| Solana | `862YZXoRvaoTiP1AkQEEZ5FFGgPFsUhbEoRu4r44RhSe` |
-| Ethereum | `0xF890c6A128920D145D47753D0b1159fA4Db2861d` |
+2. Tap the downloaded file. Android will say it is not allowed to install unknown
+   apps from this source.
 
-Send only native SOL or ETH, or standard tokens on those chains. Anything sent
-on a different network is lost.
+3. Tap **Settings** in that message, turn on **Allow from this source**, then press
+   back and tap **Install**.
 
-No obligation either way. A bug report is worth just as much.
+4. Open it and set your payday. Everything else is worked out from that date,
+   so it is the one thing worth getting right.
+
+You can turn that permission back off afterwards. It applies to the app you
+downloaded with, usually your browser, and not to the phone as a whole.
+
+Updating later is the same steps, and installing over the top keeps your data.
 
 ## Verify what you downloaded
 
@@ -86,3 +89,22 @@ That prints `v1 scheme (JAR signing): false`. It is not missing - with
 ## Requirements
 
 Android 8.0 or later (minSdk 26), built against SDK 36.
+
+## If you want to say thanks
+
+Remainder is free and stays free. There is nothing to unlock, no account, and
+nothing here is gated behind a donation.
+
+If you get use out of it and feel like sending something, these are the only
+addresses I use. Check them character by character - transfers on both chains
+are irreversible.
+
+| Chain | Address |
+|---|---|
+| Solana | `862YZXoRvaoTiP1AkQEEZ5FFGgPFsUhbEoRu4r44RhSe` |
+| Ethereum | `0xF890c6A128920D145D47753D0b1159fA4Db2861d` |
+
+Send only native SOL or ETH, or standard tokens on those chains. Anything sent
+on a different network is lost.
+
+No obligation either way. A bug report is worth just as much.
