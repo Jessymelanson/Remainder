@@ -1,8 +1,8 @@
 # Remainder
 
-A bi-weekly paycheck budgeter for Android. Type in one paycheck, and it takes
-the bills off, then the living costs, then what you are putting away, and tells
-you what is actually left.
+A bi-weekly paycheck budgeter for Android. Type in one paycheck and it takes off
+the bills, then the living costs, then what you are putting away, and tells you
+what is left.
 
 This repository holds the source. The signed APK is published under Releases.
 
@@ -10,7 +10,7 @@ This repository holds the source. The signed APK is published under Releases.
 
 Three passes, in the order money really leaves an account:
 
-| Pass | What goes in it | Why it is in that position |
+| Pass | What goes in it | Why it is there |
 |---|---|---|
 | 🧾 Bills | Phone, car insurance, mortgage, electric, internet | Already promised. No say in them this fortnight. |
 | 🛒 Living costs | Groceries, gas | The part you actually steer. |
@@ -21,13 +21,11 @@ passes.
 
 ## Your payday drives everything
 
-This is the part most budget apps quietly get wrong. Being paid every 14 days
-does not divide into calendar months, so **most months catch two paydays and
-twice a year one catches three**.
+Being paid every 14 days does not divide into calendar months. Most months catch
+two paydays, and twice a year one catches three.
 
-Set your payday once - any payday you can remember, Remainder counts fortnights
-from it - and every monthly bill is split across the paychecks that actually
-arrive that month:
+Set your payday once, and every monthly bill is split across the paychecks that
+actually arrive that month:
 
 | A $1,200 mortgage | Paydays | Out of each check |
 |---|---|---|
@@ -35,30 +33,28 @@ arrive that month:
 | Three-payday month | 3 | **$400.00** |
 
 Same bill, same year, but every check in a three-payday month goes further.
-Averaging it away over 26 paychecks would hide the one month in six that is
+Averaging it across 26 paychecks would hide the one month in six that is
 genuinely easier than the rest.
 
 ## Install it
 
 Android will not install an app from outside a store until you allow it once.
-That is a normal part of installing anything this way, not a sign of a problem.
 
 1. On the phone, open [Releases](../../releases) and download
    `Remainder-release.apk`.
 
-2. Tap the downloaded file. Android will say it is not allowed to install unknown
-   apps from this source.
+2. Tap the downloaded file. Android will say it is not allowed to install
+   unknown apps from this source.
 
-3. Tap **Settings** in that message, turn on **Allow from this source**, then press
-   back and tap **Install**.
+3. Tap **Settings** in that message, turn on **Allow from this source**, then
+   press back and tap **Install**.
 
-4. Open it and set your payday. Everything else is worked out from that date,
-   so it is the one thing worth getting right.
+4. Open it and set your payday. Everything else is worked out from that date, so
+   it is the one thing worth getting right.
 
 You can turn that permission back off afterwards. It applies to the app you
-downloaded with, usually your browser, and not to the phone as a whole.
-
-Updating later is the same steps, and installing over the top keeps your data.
+downloaded with, usually your browser, and not to the phone as a whole. Updating
+later is the same steps, and installing over the top keeps your data.
 
 ## Verify what you downloaded
 
@@ -82,9 +78,8 @@ CN=JApps, OU=JFamily, O=JApps, C=CA
 apksigner verify --print-certs Remainder-release.apk
 ```
 
-That prints `v1 scheme (JAR signing): false`. It is not missing - with
-`minSdk 26`, apksigner only verifies the schemes that platform range uses. Add
-`--min-sdk-version 21` and v1, v2 and v3 all verify.
+This reports `v1 scheme (JAR signing): false`, which is expected at `minSdk 26`.
+Pass `--min-sdk-version 21` and v1, v2 and v3 all verify.
 
 ## Requirements
 
@@ -93,11 +88,11 @@ Android 8.0 or later (minSdk 26), built against SDK 36.
 ## If you want to say thanks
 
 Remainder is free and stays free. There is nothing to unlock, no account, and
-nothing here is gated behind a donation.
+nothing gated behind a donation.
 
 If you get use out of it and feel like sending something, these are the only
-addresses I use. Check them character by character - transfers on both chains
-are irreversible.
+addresses I use. Check them character by character, since transfers on both
+chains are irreversible.
 
 | Chain | Address |
 |---|---|
@@ -107,4 +102,4 @@ are irreversible.
 Send only native SOL or ETH, or standard tokens on those chains. Anything sent
 on a different network is lost.
 
-No obligation either way. A bug report is worth just as much.
+A bug report is just as welcome.
