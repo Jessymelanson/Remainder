@@ -30,6 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.remainder.app.data.Budget
+import com.remainder.app.data.Cadence
+import com.remainder.app.data.Category
 import com.remainder.app.data.GoalProgress
 import com.remainder.app.data.Group
 import com.remainder.app.data.PAYCHECKS_PER_YEAR
@@ -402,6 +404,16 @@ private fun AdviceCard(note: Note) {
 }
 
 /**
+ * A contribution as it was entered: "$600.00 a month" or "$200.00 a paycheck".
+ *
+ * The finish dates beside it come from the yearly average, so quoting this
+ * month's slice would pair a figure with a date it did not produce.
+ */
+private fun contribution(c: Category, scale: Double = 1.0): String =
+    Cash.money(c.amount * scale) +
+        if (c.cadence == Cadence.MONTHLY) " a month" else " a paycheck"
+
+/**
  * The advice, built from the numbers rather than picked from a list.
  *
  * Every note here names a figure the user typed in. Generic encouragement is
@@ -504,7 +516,7 @@ internal fun advice(
 
     // Each goal, with a date rather than a vague encouragement.
     b.categories.filter { it.enabled && it.hasGoal }.forEach { c ->
-        val g = c.goal(b.slice(c))
+        val g = c.goal(c.perPaycheckOnAverage)
         val key = "goal-${c.id}"
         notes += when {
             g.reached -> Note(
@@ -531,12 +543,11 @@ internal fun advice(
                     "${c.name}: ${Cash.percent(g.fraction)} of the way there",
                     "${Cash.money(c.saved)} of ${Cash.money(c.target)}, with " +
                         "${Cash.money(g.remaining)} to go. At " +
-                        "${Cash.money(b.slice(c))} a paycheck that is $checks more " +
+                        "${contribution(c)} that is $checks more " +
                         (if (checks == 1) "payday" else "paydays") +
                         ", landing around ${goalDate(checks)}" +
                         (if (years >= 1.0) ", about ${"%.1f".format(years)} years." else ".") +
-                        " Adding ${Cash.money(b.slice(c) * 0.25)} a paycheck would " +
-                        "bring that forward.",
+                        " Adding ${contribution(c, 0.25)} would bring that forward.",
                     key = key
                 )
             }
@@ -548,7 +559,7 @@ internal fun advice(
     // on purpose and an app that keeps bringing it up is nagging.
     val emergency = b.categories.firstOrNull { it.id == "emergency" && it.enabled }
     if (monthlyOutgoings > 0 && emergency != null) {
-        val putting = b.slice(emergency)
+        val putting = emergency.perPaycheckOnAverage
         val already = emergency.saved
         val cover = monthlyOutgoings * 3
 
@@ -584,7 +595,7 @@ internal fun advice(
                     "Three months of cover is ${Cash.money(cover)}",
                     (if (already > 0) "You have ${Cash.money(already)}, so " else "") +
                         "${Cash.money(progress.remaining)} to go. At " +
-                        "${Cash.money(putting)} a paycheck that is about $checks " +
+                        "${contribution(emergency)} that is about $checks " +
                         (if (checks == 1) "payday" else "paydays") +
                         (if (years >= 1.0) ", roughly ${"%.1f".format(years)} years" else "") +
                         ", landing around ${goalDate(checks)}. Once it is full, point " +
@@ -638,7 +649,7 @@ internal fun advice(
         notes += Note(
             "🎯",
             "Balanced to the penny",
-            "Every pound has a job. Keep an eye on it though: a plan with no slack " +
+            "Every penny has a job. Keep an eye on it though: a plan with no slack " +
                 "in it turns into an overspend the first time a bill goes up."
         )
     }

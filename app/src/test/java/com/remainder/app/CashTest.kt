@@ -1,7 +1,12 @@
 package com.remainder.app
 
+import com.remainder.app.data.Budget
+import com.remainder.app.data.Category
+import com.remainder.app.data.Group
+import com.remainder.app.data.Verdict
 import com.remainder.app.ui.Cash
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Test
 
 /**
@@ -120,5 +125,35 @@ class CashTest {
         assertEquals("", Cash.editable(0.0))
         assertEquals("2000", Cash.editable(2000.0))
         assertEquals("2000.50", Cash.editable(2000.50))
+    }
+
+    /**
+     * A balanced plan in a three payday month.
+     *
+     * $500 checks against $400 + $1,100 of monthly bills splits to thirds and
+     * lands 5.7e-14 under zero. The verdict rightly calls that balanced, but the
+     * formatter kept the sign and the card read "Balanced to the penny" over
+     * "-$0.00 left".
+     */
+    @Test
+    fun `a rounding remainder never prints as minus zero`() {
+        val b = Budget(
+            500.0,
+            listOf(
+                Category("a", "🏠", "Rent", Group.BILL, 400.0),
+                Category("b", "💡", "Other", Group.BILL, 1100.0)
+            ),
+            paydaysThisMonth = 3
+        )
+        assertEquals(Verdict.BALANCED, b.verdict)
+        assertFalse(Cash.money(b.leftOver), Cash.money(b.leftOver).contains('-'))
+        assertFalse(Cash.money(b.monthLeftOver).contains('-'))
+        assertFalse(Cash.rounded(-0.2).contains('-'))
+        assertEquals(Cash.money(0.0), Cash.money(-0.004))
+    }
+
+    @Test
+    fun `a real negative keeps its sign`() {
+        assertEquals(true, Cash.money(-0.01).contains('-'))
     }
 }

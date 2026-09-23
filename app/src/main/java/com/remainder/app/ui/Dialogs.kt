@@ -29,7 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -60,11 +60,11 @@ fun AmountDialog(
     onSetEnabled: (Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var text by remember { mutableStateOf(Cash.editable(category.amount)) }
-    var cadence by remember { mutableStateOf(category.cadence) }
-    var savedText by remember { mutableStateOf(Cash.editable(category.saved)) }
-    var targetText by remember { mutableStateOf(Cash.editable(category.target)) }
-    var confirmDelete by remember { mutableStateOf(false) }
+    var text by rememberSaveable { mutableStateOf(Cash.editable(category.amount)) }
+    var cadence by rememberSaveable { mutableStateOf(category.cadence) }
+    var savedText by rememberSaveable { mutableStateOf(Cash.editable(category.saved)) }
+    var targetText by rememberSaveable { mutableStateOf(Cash.editable(category.target)) }
+    var confirmDelete by rememberSaveable { mutableStateOf(false) }
 
     // Deleting is the one thing here that cannot be undone by reopening the
     // dialog, so it asks. Everything else is just a number you can retype.
@@ -197,7 +197,7 @@ fun AmountDialog(
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    val progress = preview.goal(preview.perPaycheck(paydaysThisMonth))
+                    val progress = preview.goal(preview.perPaycheckOnAverage)
                     if (target > 0.0) {
                         VSpace(12)
                         GoalBar(progress.fraction)
@@ -288,11 +288,11 @@ fun AddCategoryDialog(
     onAdd: (icon: String, name: String, group: Group, amount: Double, cadence: Cadence) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var icon by remember { mutableStateOf(ICON_CHOICES.first()) }
-    var group by remember { mutableStateOf(Group.BILL) }
-    var cadence by remember { mutableStateOf(Cadence.MONTHLY) }
-    var text by remember { mutableStateOf("") }
+    var name by rememberSaveable { mutableStateOf("") }
+    var icon by rememberSaveable { mutableStateOf(ICON_CHOICES.first()) }
+    var group by rememberSaveable { mutableStateOf(Group.BILL) }
+    var cadence by rememberSaveable { mutableStateOf(Cadence.MONTHLY) }
+    var text by rememberSaveable { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,

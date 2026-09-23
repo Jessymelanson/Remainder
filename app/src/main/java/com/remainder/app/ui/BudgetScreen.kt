@@ -309,16 +309,23 @@ private fun VerdictCard(budget: Budget, state: BudgetViewModel.State) {
             // is the one that makes a three payday month worth knowing about,
             // because the extra check is only visible across a whole month.
             if (budget.paycheck > 0.0 && verdict != Verdict.EMPTY) {
+                // Short only when the verdict says so. A bare "< 0" disagreed
+                // with it: splitting monthly bills three ways routinely leaves
+                // a balanced plan 0.00000000000006 under, which printed as a red
+                // "-$0.00 short" beneath "Balanced to the penny".
+                val short = verdict == Verdict.OVER
                 VSpace(10)
                 Text(
                     "Across ${monthName(state.month)}'s " +
                         "${state.paydaysThisMonth} paydays: " +
                         Cash.money(budget.monthIncome) + " in, " +
                         Cash.money(budget.monthOut) + " out, " +
-                        Cash.money(budget.monthLeftOver) +
-                        (if (budget.monthLeftOver < 0) " short." else " left."),
+                        // Unsigned, as the headline is: "short" already says
+                        // which way, and "-$200.00 short" reads as a surplus.
+                        Cash.money(kotlin.math.abs(budget.monthLeftOver)) +
+                        (if (short) " short." else " left."),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (budget.monthLeftOver < 0) Money.bad() else Money.good()
+                    color = if (short) Money.bad() else Money.good()
                 )
             }
 
@@ -363,11 +370,12 @@ private fun VerdictCard(budget: Budget, state: BudgetViewModel.State) {
                     Cash.money(budget.saving.took),
                     Cash.percent(budget.share(budget.saving.took))
                 )
+                val over = verdict == Verdict.OVER
                 LegendRow(
-                    if (budget.leftOver < 0) MaterialTheme.colorScheme.error
+                    if (over) MaterialTheme.colorScheme.error
                     else MaterialTheme.colorScheme.outlineVariant,
-                    if (budget.leftOver < 0) "Over by" else "Left over",
-                    Cash.money(if (budget.leftOver < 0) budget.shortfall else budget.leftOver),
+                    if (over) "Over by" else "Left over",
+                    Cash.money(if (over) budget.shortfall else budget.leftOver),
                     Cash.percent(budget.share(kotlin.math.abs(budget.leftOver)))
                 )
                 VSpace(4)
@@ -425,7 +433,7 @@ private fun GoalsTotal(state: BudgetViewModel.State) {
  */
 @Composable
 private fun GoalStrip(category: Category, budget: Budget, goalDate: (Int) -> String) {
-    val progress = category.goal(budget.slice(category))
+    val progress = category.goal(category.perPaycheckOnAverage)
 
     Column(Modifier.padding(start = 68.dp, end = 14.dp, bottom = 12.dp)) {
         GoalBar(progress.fraction)

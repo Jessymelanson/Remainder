@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,8 +67,8 @@ fun ThemeScreen(
     fileMessage: FileMessage?,
     onBack: () -> Unit
 ) {
-    var confirmReset by remember { mutableStateOf(false) }
-    var confirmRestore by remember { mutableStateOf(false) }
+    var confirmReset by rememberSaveable { mutableStateOf(false) }
+    var confirmRestore by rememberSaveable { mutableStateOf(false) }
 
     if (confirmRestore) {
         AlertDialog(

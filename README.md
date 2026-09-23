@@ -60,7 +60,7 @@ later is the same steps, and installing over the top keeps your data.
 
 | File | SHA-256 |
 |---|---|
-| `Remainder-release.apk` | `3c26fe02dec67a14c24215d17bb48bb15cbf77b2fed52898d397af9fb6aa0ff3` |
+| `Remainder-release.apk` | `d236b7a19605f7b826f186917ee1f04c7745dcd99711c37dd7bfd7a4d648682e` |
 
 ```bash
 sha256sum Remainder-release.apk                    # Linux, macOS, git bash

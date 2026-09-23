@@ -48,10 +48,23 @@ object Cash {
         return Formats(now).also { cached = it }
     }
 
-    fun money(value: Double): String = formats().currency.format(value)
+    fun money(value: Double): String = formats().currency.format(tidy(value, CENT))
 
     /** For big headline figures where the cents are noise. */
-    fun rounded(value: Double): String = formats().whole.format(value)
+    fun rounded(value: Double): String = formats().whole.format(tidy(value, DOLLAR))
+
+    /**
+     * Zero, sign and all, for anything too small to show.
+     *
+     * Splitting a monthly bill three ways leaves remainders like -5.7e-14, and
+     * the formatter keeps the minus sign on a value it rounds to nothing, so a
+     * plan balanced to the penny read "-$0.00 left".
+     */
+    private fun tidy(value: Double, below: Double): Double =
+        if (abs(value) < below) 0.0 else value
+
+    private const val CENT = 0.005
+    private const val DOLLAR = 0.5
 
     /** A deduction, always written as a subtraction. */
     fun minus(value: Double): String = "- " + formats().currency.format(abs(value))

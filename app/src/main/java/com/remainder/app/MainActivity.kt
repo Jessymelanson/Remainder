@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -31,7 +32,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.remainder.app.data.Backup
-import com.remainder.app.data.Category
 import com.remainder.app.ui.AddCategoryDialog
 import com.remainder.app.ui.AmountDialog
 import com.remainder.app.ui.BreakdownScreen
@@ -94,8 +94,11 @@ private fun Root() {
                 return@Surface
             }
 
-            var tab by remember { mutableStateOf(Tab.Budget) }
-            var themeOpen by remember { mutableStateOf(false) }
+            // Saveable, so turning the phone does not throw someone out of
+            // Settings or a half typed dialog: rotation rebuilds the activity,
+            // and a plain remember goes with it.
+            var tab by rememberSaveable { mutableStateOf(Tab.Budget) }
+            var themeOpen by rememberSaveable { mutableStateOf(false) }
             var fileMessage by remember { mutableStateOf<FileMessage?>(null) }
 
             // The system file picker, so backups go wherever the user keeps
@@ -140,16 +143,14 @@ private fun Root() {
                     FileMessage("Could not read that file. Nothing was changed.", ok = false)
                 }
             }
-            var editing by remember { mutableStateOf<Category?>(null) }
-            var adding by remember { mutableStateOf(false) }
-            var pickingPayday by remember { mutableStateOf(false) }
+            var editing by rememberSaveable { mutableStateOf<String?>(null) }
+            var adding by rememberSaveable { mutableStateOf(false) }
+            var pickingPayday by rememberSaveable { mutableStateOf(false) }
 
-            // The category being edited is looked up fresh each time rather
-            // than held, so a dialog left open across a change is never
-            // editing a stale copy of the row.
-            val target = editing?.let { held ->
-                state.categories.firstOrNull { it.id == held.id }
-            }
+            // The category being edited is held by id and looked up fresh each
+            // time, so a dialog left open across a change is never editing a
+            // stale copy of the row.
+            val target = editing?.let { id -> state.categories.firstOrNull { it.id == id } }
             if (target != null) {
                 AmountDialog(
                     category = target,
@@ -242,7 +243,7 @@ private fun Root() {
                         Tab.Budget -> BudgetScreen(
                             state = state,
                             onPaycheck = vm::setPaycheck,
-                            onEdit = { editing = it },
+                            onEdit = { editing = it.id },
                             onAdd = { adding = true },
                             onOpenTheme = { themeOpen = true },
                             onStepMonth = vm::stepMonth,

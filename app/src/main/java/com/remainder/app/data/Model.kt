@@ -98,6 +98,19 @@ data class Category(
             Cadence.MONTHLY -> amount
         }
 
+    /**
+     * What this takes out of a typical paycheck across the whole year.
+     *
+     * The figure for anything projected past this month, like a goal's finish
+     * date. A monthly amount is split two ways in most months and three in
+     * some, so extrapolating from any single month's slice is wrong in every
+     * month: $600 a month towards $6,000 is ten months either way, but read
+     * off a two payday month it came out at 20 paychecks and off a three
+     * payday month at 30, and the date jumped by months as you paged through
+     * them.
+     */
+    val perPaycheckOnAverage: Double get() = perYear / PAYCHECKS_PER_YEAR
+
     /** True when the figure taken per paycheck differs from the one entered. */
     val converted: Boolean get() = cadence == Cadence.MONTHLY && enabled && amount > 0.0
 

@@ -166,10 +166,32 @@ class GoalTest {
             saved = 0.0, target = 6000.0
         )
         assertEquals(300.0, savings.perPaycheck(2), 0.0001)
-        assertEquals(20, savings.goal(savings.perPaycheck(2)).paychecksNeeded)
-
         assertEquals(200.0, savings.perPaycheck(3), 0.0001)
-        assertEquals(30, savings.goal(savings.perPaycheck(3)).paychecksNeeded)
+    }
+
+    /**
+     * But the finish date is the whole year's rate, not one month's.
+     *
+     * $600 a month towards $6,000 is ten months, about 22 fortnights, whichever
+     * month is on screen. Projected from one month's slice it came out at 20
+     * paychecks in a two payday month and 30 in a three payday one, so the
+     * date moved by four months as you paged between them.
+     */
+    @Test
+    fun `a monthly contribution finishes on the same date from any month`() {
+        val savings = Category(
+            "s", "💰", "Savings", Group.SAVING, 600.0, Cadence.MONTHLY,
+            saved = 0.0, target = 6000.0
+        )
+        assertEquals(600.0 * 12 / 26, savings.perPaycheckOnAverage, 0.0001)
+        assertEquals(22, savings.goal(savings.perPaycheckOnAverage).paychecksNeeded)
+    }
+
+    @Test
+    fun `a per paycheck contribution averages to itself`() {
+        val savings = Category("s", "💰", "Savings", Group.SAVING, 200.0, Cadence.PER_PAYCHECK)
+        assertEquals(200.0, savings.perPaycheckOnAverage, 0.0001)
+        assertEquals(0.0, savings.copy(enabled = false).perPaycheckOnAverage, 0.0001)
     }
 
     // ---- Turning paychecks into a date ------------------------------------

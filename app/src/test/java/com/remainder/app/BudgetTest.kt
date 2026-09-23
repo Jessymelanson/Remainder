@@ -283,15 +283,31 @@ class BudgetTest {
     }
 
     /**
-     * The emergency fund is sized against a month of real outgoings, so the
-     * per paycheck lines have to be counted once per payday and the monthly
-     * ones exactly once.
+     * The emergency fund is sized against a typical month: monthly lines once,
+     * per paycheck lines at 26 a year over twelve months. The same in every
+     * month, because the cover is meant to last through any of them.
      */
     @Test
-    fun `monthly outgoings count bills once and living costs per payday`() {
-        // Bills 1200 + 60 + 120 = 1380. Living 300 a check.
-        assertEquals(1380.0 + 600.0, worked(2).monthlyOutgoings, 0.0001)
-        assertEquals(1380.0 + 900.0, worked(3).monthlyOutgoings, 0.0001)
+    fun `monthly outgoings are a typical month whichever month is shown`() {
+        // Bills 1200 + 60 + 120 = 1380. Living 300 a check, 7800 a year.
+        assertEquals(1380.0 + 650.0, worked(2).monthlyOutgoings, 0.0001)
+        assertEquals(1380.0 + 650.0, worked(3).monthlyOutgoings, 0.0001)
+    }
+
+    @Test
+    fun `yearly savings do not depend on the month shown`() {
+        val b = { paydays: Int ->
+            Budget(
+                2000.0,
+                listOf(
+                    Category("s", "💰", "Savings", Group.SAVING, 300.0, Cadence.MONTHLY),
+                    Category("e", "🛟", "Emergency", Group.SAVING, 50.0, Cadence.PER_PAYCHECK)
+                ),
+                paydays
+            )
+        }
+        assertEquals(3600.0 + 1300.0, b(2).yearlySaved, 0.0001)
+        assertEquals(3600.0 + 1300.0, b(3).yearlySaved, 0.0001)
     }
 
     @Test

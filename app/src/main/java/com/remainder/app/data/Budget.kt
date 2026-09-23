@@ -153,13 +153,29 @@ data class Budget(
     val needsRate: Double get() = share(bills.took + living.took)
 
     val yearlyLeftOver: Double get() = leftOver * PAYCHECKS_PER_YEAR
-    val yearlySaved: Double get() = saving.took * PAYCHECKS_PER_YEAR
+    /**
+     * What the savings lines put away over a year.
+     *
+     * Summed from each line's yearly figure rather than this paycheck's slice
+     * times 26: a monthly contribution is split two or three ways depending on
+     * the month, so the slice times 26 came to thirteen months of it in most
+     * months and under nine in a three payday one.
+     */
+    val yearlySaved: Double
+        get() = categories.filter { it.group == Group.SAVING }.sumOf { it.perYear }
 
-    /** Bills and living costs for a whole month, for sizing an emergency fund. */
+    /**
+     * Bills and living costs for a typical month, for sizing an emergency fund.
+     *
+     * The year's outgoings over twelve, not the month on screen. Per paycheck
+     * costs come out three times in a three payday month, so sizing the fund
+     * against that month moved "three months of cover" every time someone
+     * paged between months, for a buffer meant to last through any of them.
+     */
     val monthlyOutgoings: Double
         get() = categories
-            .filter { it.enabled && it.group != Group.SAVING }
-            .sumOf { it.perMonth(paydaysThisMonth) }
+            .filter { it.group != Group.SAVING }
+            .sumOf { it.perYear } / MONTHS_PER_YEAR
 
     /** Biggest deduction that is not a bill, which is the easiest lever. */
     val easiestCut: Category?
